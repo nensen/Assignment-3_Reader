@@ -8,13 +8,8 @@ namespace Reader
         private static void Main(string[] args)
         {
             var isAdmin = IsUserAdmin();
-            Console.Clear();
-
             var fileName = GetFileName();
-            Console.Clear();
-
             var filePath = GetFilePath(fileName, isAdmin);
-            Console.Clear();
 
             var fileContent = GetFileContent(filePath);
             Console.Clear();
