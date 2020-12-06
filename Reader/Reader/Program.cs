@@ -11,13 +11,14 @@ namespace Reader
             var fileName = GetFileName();
             var filePath = GetFilePath(fileName, isAdmin);
 
-            var fileContent = GetFileContent(filePath);
-            Console.Clear();
-
-            if (String.IsNullOrEmpty(fileContent))
+            if (String.IsNullOrEmpty(filePath))
             {
+                Console.ReadLine();
                 return;
             }
+
+            var fileContent = GetFileContent(filePath);
+            Console.Clear();
 
             var isFileEncrypted = IsFileEncrypted();
 
@@ -87,7 +88,7 @@ namespace Reader
             Console.WriteLine();
             var fileName = Console.ReadLine();
 
-            Console.Write($"Please provide file extension (e.g. .xml or .txt)");
+            Console.Write($"Please provide file extension (.xml or .txt or .json)");
             Console.WriteLine();
             var fileExtension = Console.ReadLine();
 
