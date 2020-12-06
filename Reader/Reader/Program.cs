@@ -37,12 +37,10 @@ namespace Reader
             Console.WriteLine();
             var fileName = Console.ReadLine();
 
-            if (!fileName.Contains("."))
-            {
-                fileName = fileName + ".txt";
-            }
-
-            return Path.Combine(fileDir, fileName);
+            Console.Write($"Please provide file extension (e.g. .xml or .txt)");
+            Console.WriteLine();
+            var fileExtension = Console.ReadLine();
+            return Path.Combine(fileDir, fileName + fileExtension);
         }
 
         private static string GetFileDir()
