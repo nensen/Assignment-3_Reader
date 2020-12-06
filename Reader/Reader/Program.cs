@@ -7,9 +7,17 @@ namespace Reader
     {
         private static void Main(string[] args)
         {
-            var filePath = GetFilePath();
+            var isAdmin = IsUserAdmin();
+            Console.Clear();
+
+            var fileName = GetFileName();
+            Console.Clear();
+
+            var filePath = GetFilePath(fileName, isAdmin);
+            Console.Clear();
 
             var fileContent = GetFileContent(filePath);
+            Console.Clear();
 
             if (String.IsNullOrEmpty(fileContent))
             {
@@ -24,9 +32,16 @@ namespace Reader
                 fileContent = cryptor.Decrypt(fileContent);
             }
 
+            Console.Clear();
             DumpFileContentToScreen(fileContent);
 
             Console.ReadKey();
+        }
+
+        private static bool IsUserAdmin()
+        {
+            Console.WriteLine("Admin have access to admin folder. Are you admin? Type Y for Yes, N for no.");
+            return Console.ReadLine() == "Y";
         }
 
         private static bool IsFileEncrypted()
@@ -38,26 +53,39 @@ namespace Reader
 
         private static void DumpFileContentToScreen(string text)
         {
-            Console.Clear();
-            Console.WriteLine("File content bellow");
+            Console.WriteLine("File content bellow:");
             Console.WriteLine();
             Console.WriteLine(text);
         }
 
-        private static string GetFileContent(string filePath)
+        private static string GetFilePath(string fileName, bool isAdmin)
         {
-            if (!File.Exists(filePath))
+            var userFilePath = Path.Combine(GetFileDir(), fileName);
+
+            if (!File.Exists(userFilePath))
             {
-                Console.WriteLine($"Specified file do not exist in directory {GetFileDir()}");
-                Console.WriteLine("Exiting application.");
-                return string.Empty;
+                var adminFilePath = Path.Combine(GetFileDir(), "AdminFolder", fileName);
+
+                if (!File.Exists(adminFilePath))
+                {
+                    Console.WriteLine($"Specified file do not exist in directory {GetFileDir()}");
+                    Console.WriteLine("Exiting application.");
+                    return string.Empty;
+                }
+
+                return adminFilePath;
             }
 
+            return userFilePath;
+        }
+
+        private static string GetFileContent(string filePath)
+        {
             Console.WriteLine($"Reading file in location: {filePath}");
             return File.ReadAllText(filePath);
         }
 
-        private static string GetFilePath()
+        private static string GetFileName()
         {
             var fileDir = GetFileDir();
             Console.Write($"Please provide valid file name in location {fileDir}");
@@ -68,7 +96,7 @@ namespace Reader
             Console.WriteLine();
             var fileExtension = Console.ReadLine();
 
-            return Path.Combine(fileDir, fileName + fileExtension);
+            return fileName + fileExtension;
         }
 
         private static string GetFileDir()
